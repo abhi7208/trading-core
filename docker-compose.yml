@@ -1,0 +1,66 @@
+# One command:  make setup     (or: docker compose up -d --build && docker compose exec app composer setup-docker)
+services:
+  app:
+    build: { context: ., dockerfile: docker/Dockerfile }
+    command: php artisan serve --host=0.0.0.0 --port=8000
+    environment: &env
+      DB_HOST: mysql
+      REDIS_HOST: redis
+      PHP_CLI_SERVER_WORKERS: 8   # let the dev server handle requests in parallel
+    volumes: ['./:/app']
+    ports: ['8000:8000']
+    depends_on:
+      mysql: { condition: service_healthy }
+      redis: { condition: service_healthy }
+
+  # Workers: the "orders" queue is listed first, so settlements always go before audit writes.
+  worker:
+    build: { context: ., dockerfile: docker/Dockerfile }
+    command: php artisan queue:work redis --queue=orders,default --tries=5 --sleep=1
+    environment: *env
+    volumes: ['./:/app']
+    depends_on: [app]
+    deploy: { replicas: 3 }       # several workers in parallel, as in the brief
+
+  scheduler:
+    build: { context: ., dockerfile: docker/Dockerfile }
+    command: php artisan schedule:work
+    environment: *env
+    volumes: ['./:/app']
+    depends_on: [app]
+
+  simulator:
+    build: { context: ., dockerfile: docker/Dockerfile }
+    command: php artisan market:simulate --rate=50
+    environment: *env
+    volumes: ['./:/app']
+    depends_on: [app]
+    profiles: ['feed']            # start with: docker compose --profile feed up -d simulator
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: trading
+      MYSQL_USER: trading
+      MYSQL_PASSWORD: secret
+    command: --log-bin-trust-function-creators=1   # allows the ledger's append-only triggers
+    ports: ['3306:3306']
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./docker/mysql-init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', '127.0.0.1', '-psecret']
+      interval: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    ports: ['6379:6379']
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      retries: 20
+
+volumes:
+  mysql-data:
