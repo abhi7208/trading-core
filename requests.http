@@ -1,0 +1,65 @@
+### Trading Core API — open in VS Code (REST Client) or PhpStorm and click "Send Request".
+@api = http://localhost:8000/api/v1
+@alice = alice-demo-token-a1b2c3d4e5f6
+@bob = bob-demo-token-f6e5d4c3b2a1
+
+### Place a BUY LIMIT order (reserves quantity x limit_price)
+POST {{api}}/orders
+Authorization: Bearer {{alice}}
+Accept: application/json
+Content-Type: application/json
+Idempotency-Key: alice-order-001
+
+{"asset": "BTC-USD", "side": "BUY", "type": "LIMIT", "quantity": "0.01", "limit_price": "60000.00"}
+
+### Retry the exact same request: returns the original response, Idempotent-Replayed: true
+POST {{api}}/orders
+Authorization: Bearer {{alice}}
+Accept: application/json
+Content-Type: application/json
+Idempotency-Key: alice-order-001
+
+{"asset": "BTC-USD", "side": "BUY", "type": "LIMIT", "quantity": "0.01", "limit_price": "60000.00"}
+
+### Same key, different body: 409 IDEMPOTENCY_KEY_REUSED
+POST {{api}}/orders
+Authorization: Bearer {{alice}}
+Accept: application/json
+Content-Type: application/json
+Idempotency-Key: alice-order-001
+
+{"asset": "BTC-USD", "side": "BUY", "type": "LIMIT", "quantity": "0.02", "limit_price": "60000.00"}
+
+### MARKET SELL (reserves the holding)
+POST {{api}}/orders
+Authorization: Bearer {{bob}}
+Accept: application/json
+Content-Type: application/json
+Idempotency-Key: bob-order-001
+
+{"asset": "AAPL", "side": "SELL", "type": "MARKET", "quantity": "5"}
+
+### List my orders (filters + cursor pagination)
+GET {{api}}/orders?status=PENDING&asset=BTC-USD&per_page=20
+Authorization: Bearer {{alice}}
+Accept: application/json
+
+### Show one order with executions (replace the uuid)
+GET {{api}}/orders/REPLACE-WITH-ORDER-UUID
+Authorization: Bearer {{alice}}
+Accept: application/json
+
+### Cancel a PENDING order
+DELETE {{api}}/orders/REPLACE-WITH-ORDER-UUID
+Authorization: Bearer {{alice}}
+Accept: application/json
+
+### Wallet and positions
+GET {{api}}/wallet
+Authorization: Bearer {{alice}}
+Accept: application/json
+
+### Market summary (last 24h)
+GET {{api}}/market/summary
+Authorization: Bearer {{alice}}
+Accept: application/json
