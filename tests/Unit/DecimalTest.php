@@ -37,6 +37,13 @@ class DecimalTest extends TestCase
     }
 
     #[Test]
+    public function it_refuses_floats(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        Decimal::of(1.5);
+    }
+
+    #[Test]
     public function normalized_form_ignores_trailing_zeros(): void
     {
         $this->assertSame(Decimal::of('1.5')->normalized(), Decimal::of('1.50000')->normalized());

@@ -32,10 +32,16 @@ final class Decimal implements JsonSerializable, Stringable
     /**
      * Build from a string like "123.45" or an int. Floats are refused on purpose.
      */
-    public static function of(string|int|self $value): self
+    public static function of(mixed $value): self
     {
         if ($value instanceof self) {
             return $value;
+        }
+
+        // Declared as mixed on purpose: with a string|int type, PHP would silently turn
+        // a float 1.5 into "1.5" before this method ever saw it. Here we can refuse it.
+        if (! is_string($value) && ! is_int($value)) {
+            throw new InvalidArgumentException('Decimal accepts only strings or ints, got '.get_debug_type($value).'.');
         }
 
         if (is_string($value) && ! preg_match('/^-?\d+(\.\d+)?$/', $value)) {
