@@ -58,7 +58,10 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'strict' => true,
-            'engine' => null,
+            // Always InnoDB, whatever the server's default is. The money rules depend on
+            // InnoDB: transactions, row locks (SELECT ... FOR UPDATE) and foreign keys.
+            // MyISAM has none of these.
+            'engine' => 'InnoDB',
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
@@ -78,7 +81,10 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'strict' => true,
-            'engine' => null,
+            // Always InnoDB, whatever the server's default is. The money rules depend on
+            // InnoDB: transactions, row locks (SELECT ... FOR UPDATE) and foreign keys.
+            // MyISAM has none of these.
+            'engine' => 'InnoDB',
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
