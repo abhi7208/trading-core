@@ -46,6 +46,7 @@ class Order extends Model
         'filled_at', 'cancelled_at',
     ];
 
+    /** @return array<string, string> */
     protected function casts(): array
     {
         return [

@@ -22,14 +22,16 @@ make setup
 This builds the image, starts MySQL, Redis, the API, 3 queue workers and the scheduler, then runs
 the migrations and seeders. The API is on **http://localhost:8000**.
 
-Without `make`:
+Without `make` (the same steps):
 
 ```bash
-docker compose up -d --build
-docker compose exec app composer install
-docker compose exec app sh -c '[ -f .env ] || cp .env.example .env'
-docker compose exec app php artisan key:generate
-docker compose exec app php artisan migrate:fresh --seed --force
+docker compose build
+docker compose up -d mysql redis
+docker compose run --rm --no-deps app composer install --no-interaction
+docker compose run --rm --no-deps app sh -c '[ -f .env ] || cp .env.example .env'
+docker compose run --rm --no-deps app php artisan key:generate
+docker compose run --rm app php artisan migrate:fresh --seed --force
+docker compose up -d
 ```
 
 ### Seeded data

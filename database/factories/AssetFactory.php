@@ -12,6 +12,7 @@ class AssetFactory extends Factory
 {
     protected $model = Asset::class;
 
+    /** @return array<string, mixed> */
     public function definition(): array
     {
         return [

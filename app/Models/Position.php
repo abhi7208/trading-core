@@ -24,6 +24,7 @@ class Position extends Model
 {
     protected $fillable = ['user_id', 'asset_id', 'quantity', 'reserved_quantity', 'average_cost'];
 
+    /** @return array<string, string> */
     protected function casts(): array
     {
         return [

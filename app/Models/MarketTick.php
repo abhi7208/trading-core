@@ -22,6 +22,7 @@ class MarketTick extends Model
 
     protected $fillable = ['asset_id', 'price', 'recorded_at'];
 
+    /** @return array<string, string> */
     protected function casts(): array
     {
         return [

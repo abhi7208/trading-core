@@ -1,12 +1,14 @@
 # Convenience commands. Everything runs inside Docker.
 .PHONY: setup up down test test-concurrency feed logs shell
 
-setup: ## One command: build, install, migrate and seed
-	docker compose up -d --build
-	docker compose exec app composer install --no-interaction
-	docker compose exec app sh -c '[ -f .env ] || cp .env.example .env'
-	docker compose exec app php artisan key:generate
-	docker compose exec app php artisan migrate:fresh --seed --force
+setup: ## One command: build, install, migrate, seed, then start everything
+	docker compose build
+	docker compose up -d mysql redis
+	docker compose run --rm --no-deps app composer install --no-interaction
+	docker compose run --rm --no-deps app sh -c '[ -f .env ] || cp .env.example .env'
+	docker compose run --rm --no-deps app php artisan key:generate
+	docker compose run --rm app php artisan migrate:fresh --seed --force
+	docker compose up -d
 	@echo "API ready on http://localhost:8000  (tokens in README.md)"
 
 up:

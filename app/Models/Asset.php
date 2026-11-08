@@ -23,6 +23,7 @@ class Asset extends Model
 
     protected $fillable = ['symbol', 'name', 'price_precision', 'quantity_precision', 'is_tradable'];
 
+    /** @return array<string, string> */
     protected function casts(): array
     {
         return [

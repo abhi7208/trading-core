@@ -35,6 +35,8 @@ and it replays the winner's response. (3) Settlement: status re-check under lock
 `UNIQUE(executions.order_id)` as a database backstop. Requests rejected by validation or for
 insufficient funds do not consume the key, so a client can fix the problem and retry.
 
+**No Repository layer.** Actions call Eloquent directly. A repository would add an interface per model without buying anything here: there is one database, and the tests already run against real MySQL, so there is nothing to swap or mock. The one data-access rule that matters, how rows are locked, lives in `RowLocker`.
+
 **Database as the last line of defence.** CHECK constraints forbid negative balances and
 quantities; MySQL triggers refuse any `UPDATE`/`DELETE` on `ledger_entries`.
 

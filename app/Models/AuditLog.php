@@ -19,6 +19,7 @@ class AuditLog extends Model
 
     protected $fillable = ['actor_id', 'action', 'subject_type', 'subject_id', 'context', 'ip_address'];
 
+    /** @return array<string, string> */
     protected function casts(): array
     {
         return ['context' => 'array'];

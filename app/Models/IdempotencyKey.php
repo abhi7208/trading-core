@@ -19,6 +19,7 @@ class IdempotencyKey extends Model
 
     protected $fillable = ['user_id', 'key', 'request_hash', 'order_id', 'response_status', 'response_body'];
 
+    /** @return array<string, string> */
     protected function casts(): array
     {
         return ['response_body' => 'array'];

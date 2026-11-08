@@ -2,6 +2,7 @@
 services:
   app:
     build: { context: ., dockerfile: docker/Dockerfile }
+    restart: unless-stopped   # retries until `make setup` has installed vendor/ and .env
     command: php artisan serve --host=0.0.0.0 --port=8000
     environment: &env
       DB_HOST: mysql
@@ -16,6 +17,7 @@ services:
   # Workers: the "orders" queue is listed first, so settlements always go before audit writes.
   worker:
     build: { context: ., dockerfile: docker/Dockerfile }
+    restart: unless-stopped   # retries until `make setup` has installed vendor/ and .env
     command: php artisan queue:work redis --queue=orders,default --tries=5 --sleep=1
     environment: *env
     volumes: ['./:/app']
@@ -24,6 +26,7 @@ services:
 
   scheduler:
     build: { context: ., dockerfile: docker/Dockerfile }
+    restart: unless-stopped   # retries until `make setup` has installed vendor/ and .env
     command: php artisan schedule:work
     environment: *env
     volumes: ['./:/app']
@@ -31,6 +34,7 @@ services:
 
   simulator:
     build: { context: ., dockerfile: docker/Dockerfile }
+    restart: unless-stopped   # retries until `make setup` has installed vendor/ and .env
     command: php artisan market:simulate --rate=50
     environment: *env
     volumes: ['./:/app']

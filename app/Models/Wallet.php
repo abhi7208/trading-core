@@ -29,6 +29,7 @@ class Wallet extends Model
 
     protected $fillable = ['user_id', 'currency', 'available_balance', 'reserved_balance'];
 
+    /** @return array<string, string> */
     protected function casts(): array
     {
         return [

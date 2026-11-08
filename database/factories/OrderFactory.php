@@ -21,6 +21,7 @@ class OrderFactory extends Factory
 {
     protected $model = Order::class;
 
+    /** @return array<string, mixed> */
     public function definition(): array
     {
         return [

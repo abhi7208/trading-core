@@ -26,6 +26,7 @@ class Execution extends Model
 
     protected $fillable = ['order_id', 'asset_id', 'price', 'quantity', 'notional', 'fee', 'executed_at'];
 
+    /** @return array<string, string> */
     protected function casts(): array
     {
         return [

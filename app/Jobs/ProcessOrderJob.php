@@ -34,7 +34,11 @@ class ProcessOrderJob implements ShouldQueue
         $this->onQueue('orders');
     }
 
-    /** Wait 1s, then 5s, 15s, 30s between attempts (exponential-ish backoff). */
+    /**
+     * Wait 1s, then 5s, 15s, 30s between attempts (exponential-ish backoff).
+     *
+     * @return list<int>
+     */
     public function backoff(): array
     {
         return [1, 5, 15, 30];

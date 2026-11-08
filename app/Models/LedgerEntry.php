@@ -27,6 +27,7 @@ class LedgerEntry extends Model
 
     protected $fillable = ['wallet_id', 'order_id', 'type', 'bucket', 'amount', 'balance_after'];
 
+    /** @return array<string, string> */
     protected function casts(): array
     {
         return [
