@@ -67,7 +67,7 @@ class SettleOrder
         }
 
         if ($decision->isReject()) {
-            $this->close->handle($order->id, OrderStatus::Rejected, $decision->reason?->value ?? 'REJECTED');
+            $this->close->handle($order->id, OrderStatus::Rejected, $decision->reason->value ?? 'REJECTED');
 
             return 'rejected';
         }
@@ -150,7 +150,7 @@ class SettleOrder
         ]);
 
         $order->status = OrderStatus::Filled;
-        $order->filled_at = $now;
+        $order->filled_at = $now->toMutable();
         $order->save();
 
         // Held until COMMIT; thrown away if anything above fails and the transaction rolls back.

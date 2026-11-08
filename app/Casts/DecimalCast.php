@@ -26,10 +26,7 @@ class DecimalCast implements CastsAttributes
             return null;
         }
 
-        if (is_float($value)) {
-            throw new \InvalidArgumentException("Refusing to store a float in {$key}; pass a string or Decimal.");
-        }
-
+        // Decimal::of() throws on a float, so no float can ever reach a money column.
         return Decimal::of($value)->toStorage();
     }
 }

@@ -147,7 +147,7 @@ class SimulateMarket extends Command
         $prices = [];
         foreach ($assetIds as $id) {
             $quote = $store->latest($id);
-            $last = $quote?->price ?? DB::table('market_ticks')->where('asset_id', $id)->orderByDesc('recorded_at')->value('price');
+            $last = $quote->price ?? DB::table('market_ticks')->where('asset_id', $id)->orderByDesc('recorded_at')->value('price');
             $prices[$id] = Decimal::of($last === null ? '100' : (string) $last);
         }
 
