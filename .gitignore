@@ -26,3 +26,6 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 /storage/phpstan
+
+# Redis snapshot written when redis-server runs in this folder
+dump.rdb
