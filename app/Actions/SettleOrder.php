@@ -17,6 +17,7 @@ use App\Services\RowLocker;
 use App\Support\Decimal;
 use Brick\Math\RoundingMode;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use LogicException;
 
@@ -150,7 +151,7 @@ class SettleOrder
         ]);
 
         $order->status = OrderStatus::Filled;
-        $order->filled_at = $now->toMutable();
+        $order->filled_at = Carbon::instance($now);
         $order->save();
 
         // Held until COMMIT; thrown away if anything above fails and the transaction rolls back.
