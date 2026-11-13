@@ -10,7 +10,8 @@
         "brick/math": "^1.0",
         "laravel/framework": "^13.17",
         "laravel/sanctum": "^4.3",
-        "laravel/tinker": "^3.0"
+        "laravel/tinker": "^3.0",
+        "predis/predis": "^3.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

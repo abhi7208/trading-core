@@ -60,6 +60,12 @@ All three passwords are `password`.
 `market:simulate` options: `--rate` (total ticks per second, default 50), `--duration` (seconds,
 0 = forever), `--flush` (batch interval in ms, default 250).
 
+**Without Docker (for example WAMP or XAMPP on Windows):** PHP 8.3+, MySQL 8 and a Redis server
+on 127.0.0.1:6379 (on Windows, [Memurai](https://www.memurai.com/) is a Redis-compatible server).
+The phpredis extension is optional: if it is not installed, the app uses Predis, a pure-PHP client,
+automatically. Copy `.env.example` to `.env` and set your MySQL login, then `php artisan key:generate`
+and `php artisan migrate:fresh --seed`.
+
 The `orders` queue is listed first so settlement always runs before audit writes on `default`.
 
 ## 3. Tests

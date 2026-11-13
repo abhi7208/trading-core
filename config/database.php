@@ -151,7 +151,10 @@ return [
 
     'redis' => [
 
-        'client' => env('REDIS_CLIENT', 'phpredis'),
+        // phpredis (a compiled PHP extension) is faster and is used where it is installed:
+        // Docker and CI. Where it is missing, such as a default WAMP or XAMPP install,
+        // fall back to Predis, a pure-PHP client, so the app still works.
+        'client' => env('REDIS_CLIENT', extension_loaded('redis') ? 'phpredis' : 'predis'),
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),

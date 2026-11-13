@@ -72,3 +72,10 @@ jobs:
 
       - name: Concurrency tests (real parallel processes)
         run: php artisan test --testsuite=Concurrency
+
+      # Same suite through the pure-PHP Predis client, the one used where the
+      # phpredis extension is not installed (for example a default WAMP setup).
+      - name: Unit and feature tests (Predis client)
+        env:
+          REDIS_CLIENT: predis
+        run: php artisan test --testsuite=Unit,Feature
