@@ -117,8 +117,7 @@ Two indexes changed after looking at real EXPLAIN plans:
 
 ## 6. Known gaps and shortcuts
 
-- **Larastan was not run locally**: in the environment used to build this, PHPStan's download kept
-  failing, so level 6 is configured and enforced in CI only. Expect to fix a few findings on first CI run.
+- Larastan (level 6) runs in CI; its first local run reported a handful of type findings, all fixed.
 - No partial fills and no fees (`fee` is always 0). Both would need `executions.order_id` to stop being
   unique and a `filled_quantity` column on orders.
 - `PROCESSING` exists in the enum but is unused: settlement is a single transaction under a row lock,
@@ -130,8 +129,9 @@ Two indexes changed after looking at real EXPLAIN plans:
 - Idempotency keys never expire; they should be pruned after e.g. 24–72 h.
 - Expiry runs every minute; settlement also refuses expired orders, so nothing fills late, but a
   reservation can stay locked up to a minute after expiry.
-- The Docker setup was written for this submission but could not be exercised where it was built (no
-  Docker daemon); the same commands were run directly against MySQL 8 and Redis.
+- The Docker setup was tested end to end (all 88 tests pass inside it). In that test, containers had no
+  internet access, so the Redis extension and Composer packages were supplied locally; on a normal
+  machine `make setup` downloads them itself.
 
 With another day: partial fills and fees, a position ledger, Horizon with separate supervisors,
 an OpenAPI spec, and load tests that run `ledger:verify` at the end.

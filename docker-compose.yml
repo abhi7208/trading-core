@@ -3,7 +3,10 @@ services:
   app:
     build: { context: ., dockerfile: docker/Dockerfile }
     restart: unless-stopped   # retries until `make setup` has installed vendor/ and .env
-    command: php artisan serve --host=0.0.0.0 --port=8000
+    # PHP's built-in server started directly, not `artisan serve`: artisan serve spawns a
+    # child process that does not get these environment variables (DB_HOST=mysql) and
+    # would fall back to 127.0.0.1 from .env.
+    command: sh -c 'cd public && exec php -S 0.0.0.0:8000 ../vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php'
     environment: &env
       DB_HOST: mysql
       REDIS_HOST: redis

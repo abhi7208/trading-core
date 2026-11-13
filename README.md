@@ -197,9 +197,11 @@ into its jobs and listeners (`AssignCorrelationId` + Laravel `Context`).
 
 ## 6. How AI tools were used
 
-This codebase was built with Claude (Anthropic) as an AI coding assistant, which generated most
-of the code, tests and documentation from the brief. I reviewed it, ran the full test suite and the
-concurrency tests against MySQL 8 and Redis, checked the EXPLAIN plans, and worked through each
-design decision so I can explain and defend every line in the walkthrough call.
+This project was built with Claude (Anthropic) as an AI coding assistant. It generated the
+code, tests and documentation from the brief.
 
-<!-- Edit this section so it accurately describes what you personally reviewed, changed and verified. -->
+The full test suite, including the parallel-process concurrency tests, was run against MySQL 8
+and Redis, both directly and inside the Docker setup, and the EXPLAIN plans in DECISIONS.md come
+from a real MySQL 8 database. Running the project on my own machine found two issues that were
+then fixed: Larastan level 6 findings, and a MySQL server whose default storage engine was
+MyISAM (the app now always creates InnoDB tables).
